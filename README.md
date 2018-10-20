@@ -1,4 +1,4 @@
-# Fundamentos De Programacion - Tec de Monterrey // Programming Fundamentals - Tec de Monterrey
+# Fundamentos De Programacion - Tec de Monterrey  Programming Fundamentals - Tec de Monterrey
 This is a place where I upload all my code from my Programming Fundamentals Class, in C++.
 This repo is meant to be a place to store my code for future personal reference, and also to see my progress as time goes by.
 
