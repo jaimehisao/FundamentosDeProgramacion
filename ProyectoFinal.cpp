@@ -2,8 +2,8 @@
 //  main.cpp
 //  ProyectoFinalFP1
 //
-//  Created by Jaime Hisao and Andres  on 10/30/18.
-//  Copyright © 2018 Jaime Hisao and Andres. All rights reserved.
+//  Created by Jaime Hisao and Andres Genda on 10/30/18.
+//  Copyright © 2018 Jaime Hisao and Andres Genda. All rights reserved.
 //
 
 #include <iostream>
@@ -12,30 +12,35 @@
 #include <cmath>
 using namespace std;
 
-/*---------------------------------------------*/
+//---------------------------------------------/
 /*                                             */
 /*    Functions to check if the user has won   */
 /*                                             */
-/*---------------------------------------------*/
+//---------------------------------------------/
 
-//Done, function to verify the vertical values
+//Function to verify the vertical values
 bool checkVertical(int matrix[4][4]){
     bool isWinner = false;
     for(int i = 0; i < 4; i++){
-            if (matrix[0][i] == 0 && matrix[1][i] == 0 && matrix[2][i] == 0 && matrix[3][i] == 0) {
-                isWinner = true;
+        if (matrix[0][i] == 0 && matrix[1][i] == 0 && matrix[2][i] == 0 && matrix[3][i] == 0) {
+            isWinner = true;
         }
     }
-     return isWinner;
-    }
-
-
-bool checkHorizontal(){
-    bool isWinner = false;
     return isWinner;
 }
 
-//Done, function to verify the diagonal values
+//Function to verify the horizontal values
+bool checkHorizontal(int matrix[4][4]){
+    bool isWinner = false;
+    for(int i = 0; i < 4; i++){
+        if(matrix[i][0] == 0 && matrix[i][1] == 0 && matrix[i][2] == 0 && matrix[i][3] == 0){
+            isWinner = true;
+        }
+    }
+    return isWinner;
+}
+
+//Function to verify the diagonal values
 bool checkDiagonal(int matrix[4][4]){
     bool isWinner = false;
     if (matrix[0][0] == 0 && matrix[1][1] == 0 && matrix[2][2] == 0 && matrix[3][3] == 0) {
@@ -48,6 +53,7 @@ bool checkDiagonal(int matrix[4][4]){
     return isWinner;
 }
 
+//Function to verify the values of the four corners
 bool checkCuantroEsquinas(int matrix[4][4]){
     bool isWinner = false;
     if(matrix[0][0] == 0 && matrix[3][0] == 0 && matrix[3][3] == 0 && matrix[0][3] == 0){
@@ -56,6 +62,7 @@ bool checkCuantroEsquinas(int matrix[4][4]){
     return isWinner;
 }
 
+//Function to verify the values on the inside of the matrix
 bool checkPocito(int matrix[4][4]){
     bool isWinner = false;
     if(matrix[1][1] == 0 && matrix[1][2] == 0 && matrix[2][1] == 0 && matrix[2][2] == 0){
@@ -64,12 +71,17 @@ bool checkPocito(int matrix[4][4]){
     return isWinner;
 }
 
-bool checkCuadroExterior(){
+//Function to verify the values on the outside of the matrix
+bool checkCuadroExterior(int matrix[4][4]){
     bool isWinner = false;
+    if(matrix[0][0] == 0 && matrix[0][1] == 0 && matrix[0][2] == 0 && matrix[0][3] == 0 && matrix[3][0] == 0 && matrix[3][1] == 0 && matrix[3][2] == 0
+       && matrix[3][3] == 0 && matrix[1][0] == 0 && matrix[2][0] == 0 && matrix[1][3] == 0 && matrix[2][3] == 0){
+        isWinner = true;
+    }
     return isWinner;
 }
 
-//********Function that calls the apropiate function to check the condition************
+//Function that calls the apropiate function to check the condition
 bool checkIfWinner(int option, int cardRecieved, int matrix[4][4]){
     bool isWinner = false; //By default set to false
     
@@ -79,7 +91,7 @@ bool checkIfWinner(int option, int cardRecieved, int matrix[4][4]){
             isWinner = checkVertical(matrix);
             break;
         case 2:
-            isWinner = checkHorizontal();
+            isWinner = checkHorizontal(matrix);
             break;
         case 3:
             isWinner = checkDiagonal(matrix);
@@ -91,21 +103,22 @@ bool checkIfWinner(int option, int cardRecieved, int matrix[4][4]){
             isWinner = checkPocito(matrix);
             break;
         case 6:
-            isWinner = checkCuadroExterior();
+            isWinner = checkCuadroExterior(matrix);
             break;
     }
     return isWinner;
 }
 
 
-/*---------------------------------------------*/
+//---------------------------------------------/
 /*                                             */
 /*    Functions that interact with the user    */
 /*                                             */
-/*---------------------------------------------*/
+//---------------------------------------------/
 
+//Shows the table with spaces
 void showTable(int matrix[4][4]){
-    cout<<"Tu Tabla de Juego Es:"<<endl;
+    cout<<endl<<"Tu Tabla de Juego Es:"<<endl<<endl;
     for (int i = 0; i<4; i++) {
         for (int j = 0; j<4; j++) {
             cout<<matrix[i][j]<<" ";
@@ -114,40 +127,44 @@ void showTable(int matrix[4][4]){
     }
 }
 
+//Asks the User for the value of the card
 int askUserForValue(vector<int> &v){
     int value = 0;
-    cout<<"Dame la carta gritada..."<<endl;
+    cout<<endl<<"Dame la carta gritada..."<<endl;
     cin>>value;
     
     //Checks if the value is an Integer
     if(cin.fail()){
-         cin.clear();
-         cin.ignore();
+        cin.clear();
+        cin.ignore();
         value = askUserForValue(v); //Calls Funtion Recursively to get the value
     }
     
     //Checks if the card had already been entered into the matrix by checking if the vlaue is in the vector.
     if(find(v.begin(), v.end(), value) != v.end()) {
-        cout<<"La carta: "<<value<<" ya habia salido antes...intente de nuevo"<<endl;
+        cout<<"La carta: "<<value<<" ya habia salido antes...intente de nuevo"<<endl<<endl;
         value = askUserForValue(v); //Calls Funtion Recursively to get the value
-    } else {
-        v.push_back(value);
     }
     
     //Checks if the card is in the allowed range
     while (value>=54 || value<0){
-        cout<<"Carta invalida, intente de nuevo..."<<endl;
+        cout<<"Carta invalida, intente de nuevo..."<<endl<<endl;
         value = askUserForValue(v); //Calls Funtion Recursively to get the value
     }
+    
+    //Checks if the card is in the vector, and adds it if it isn´t
+     if(!(find(v.begin(), v.end(), value) != v.end())) {
+     v.push_back(value);
+     }
     
     return value;
 }
 
-/*---------------------------------------------*/
+//---------------------------------------------/
 /*                                             */
 /*               Core Functions                */
 /*                                             */
-/*---------------------------------------------*/
+//---------------------------------------------/
 
 //Function that generates a random number in the range 1 to 54
 int generateRandomNumber(){
@@ -160,8 +177,7 @@ int generateRandomNumber(){
 void fillMatrixRandomly2(int matrix[4][4]){
     for (int i = 0; i < 4; i++) {
         for (int j = 0; j < 4; j++) {
-            //matrix[i][j] = generateRandomNumber();
-             matrix[i][j] = generateRandomNumber();
+            matrix[i][j] = generateRandomNumber();
         }
     }
 }
@@ -178,11 +194,11 @@ void addCardToTable(int matrix[4][4], int cardRecieved){
 }
 
 
-/*---------------------------------------------*/
+//---------------------------------------------/
 /*                                             */
 /*               Main Method                   */
 /*                                             */
-/*---------------------------------------------*/
+//---------------------------------------------/
 
 int main(int argc, const char * argv[]) {
     
@@ -193,12 +209,14 @@ int main(int argc, const char * argv[]) {
     cout<<"1.- Vertical"<<endl;
     cout<<"2.- Horizontal"<<endl;
     cout<<"3.- Diagonal"<<endl;
-    cout<<"4.- Cuantro Esquinas"<<endl;
+    cout<<"4.- Cuatro Esquinas"<<endl;
     cout<<"5.- Pocito"<<endl;
     cout<<"6.- Cuadro Exterior"<<endl;
-   // cout<<"7.- Salir del Juego"<<endl;
+    // cout<<"7.- Salir del Juego"<<endl;
     
+    cout<<endl;
     cin>>option; //Recieves the game option
+    
     
     int matrix[4][4]; //Matrix that holds the board
     vector<int> usedCards;  //Use to store the values of the cards used
@@ -211,12 +229,13 @@ int main(int argc, const char * argv[]) {
         addCardToTable(matrix, cardRecieved);
         showTable(matrix);
     } while (!checkIfWinner(option, cardRecieved, matrix));
-
+    
+    //Prints when the user wins, and displays the vaild cards that were entered.
     cout<<"LOTERIA"<<endl<<"Tus cartas fueron: ";
     for (int i = 0; i<usedCards.size(); i++) {
         cout<<usedCards.at(i)<<" ";
     }
     cout<<endl;
     
- return 0;
+    return 0;
 }
